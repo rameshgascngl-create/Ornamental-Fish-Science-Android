@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ornamental Fish Science</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_atlas">Atlas</string>
+    <string name="nav_learn">Learn</string>
+    <string name="nav_quiz">Quiz</string>
+    <string name="nav_tools">Tools</string>
+    <string name="share_title">Share species</string>
+    <string name="share_failed">No app available to share</string>
+    <string name="export_failed">Could not export bookmarks</string>
+    <string name="tts_unavailable">Voice playback is not available on this device</string>
+    <string name="tts_tamil_missing">Tamil voice not installed</string>
+    <string name="notif_denied">Notification permission is needed for revision reminders</string>
+    <string name="reminder_set">Revision reminder scheduled</string>
+    <string name="reminder_channel">Study reminders</string>
+    <string name="reminder_default_title">Revise ornamental fish quiz</string>
+    <string name="reminder_default_body">Open Ornamental Fish Science and review the questions you missed.</string>
+</resources>

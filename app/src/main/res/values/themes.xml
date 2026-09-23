@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.OrnamentalFish" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/navy</item>
+        <item name="colorPrimaryVariant">@color/navy2</item>
+        <item name="colorOnPrimary">@color/paper</item>
+        <item name="colorSecondary">@color/gold</item>
+        <item name="colorOnSecondary">@color/paper</item>
+        <item name="android:statusBarColor">@color/navy2</item>
+        <item name="android:navigationBarColor">@color/navy2</item>
+        <item name="android:windowBackground">@color/paper</item>
+    </style>
+    <style name="Theme.OrnamentalFish.Splash" parent="Theme.OrnamentalFish">
+        <item name="android:windowBackground">@color/navy2</item>
+    </style>
+    <style name="ThemeOverlay.OrnamentalFish.Toolbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/paper</item>
+        <item name="android:textColorSecondary">@color/gold_soft</item>
+    </style>
+</resources>
