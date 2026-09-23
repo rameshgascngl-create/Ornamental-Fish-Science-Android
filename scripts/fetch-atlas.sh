@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Restores frozen academic payload (atlas JPEGs, JSON, boot.js) and launcher
-# icon from the public v2.4.4 source zip. Does not overwrite v2.5.0 app.js.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 URL='https://raw.githubusercontent.com/rameshgascngl-create/Zoology-and-Life-Sciences-Digital-Learning-Resources/main/ornamental-fish-science/OrnamentalFish-v2.4.4-NEW-STORE-SOURCE.zip'
@@ -13,9 +11,17 @@ SRC="$TMP/src/app/src/main"
 mkdir -p "$ROOT/app/src/main/assets/fish_atlas" \
          "$ROOT/app/src/main/assets/data" \
          "$ROOT/app/src/main/assets/js" \
+         "$ROOT/app/src/main/assets/css" \
          "$ROOT/app/src/main/res/drawable"
 cp -a "$SRC/assets/fish_atlas/." "$ROOT/app/src/main/assets/fish_atlas/"
 cp -a "$SRC/assets/data/." "$ROOT/app/src/main/assets/data/"
 cp "$SRC/assets/js/boot.js" "$ROOT/app/src/main/assets/js/boot.js"
+cp "$SRC/assets/js/app.js" "$ROOT/app/src/main/assets/js/app.js"
+cp "$SRC/assets/css/app.css" "$ROOT/app/src/main/assets/css/app.css"
+cp "$SRC/assets/privacy-policy.html" "$ROOT/app/src/main/assets/privacy-policy.html"
 cp "$SRC/res/drawable/app_icon.png" "$ROOT/app/src/main/res/drawable/app_icon.png"
-echo "Atlas, data JSON, boot.js and app_icon.png restored."
+if [ ! -f "$ROOT/app/src/main/assets/index.html" ]; then
+  cp "$SRC/assets/index.html" "$ROOT/app/src/main/assets/index.html"
+fi
+python3 "$ROOT/scripts/apply-v250-overlay.py"
+echo "Academic payload restored and v2.5.0 overlay applied."
