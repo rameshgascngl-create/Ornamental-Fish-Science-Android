@@ -23,5 +23,9 @@ cp "$SRC/res/drawable/app_icon.png" "$ROOT/app/src/main/res/drawable/app_icon.pn
 if [ ! -f "$ROOT/app/src/main/assets/index.html" ]; then
   cp "$SRC/assets/index.html" "$ROOT/app/src/main/assets/index.html"
 fi
-python3 "$ROOT/scripts/apply-v250-overlay.py"
-echo "Academic payload restored and v2.5.0 overlay applied."
+if [ -f "$ROOT/scripts/apply-v250-overlay.py" ]; then
+  python3 "$ROOT/scripts/apply-v250-overlay.py"
+else
+  echo "NOTE: scripts/apply-v250-overlay.py not in tree yet; app.js is still v2.4.4 until that file is added."
+fi
+echo "Academic payload restored."
