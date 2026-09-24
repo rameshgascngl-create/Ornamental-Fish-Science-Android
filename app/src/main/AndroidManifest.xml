@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- AppCompat → profileinstaller merges a ProfileInstallReceiver protected by
+         android.permission.DUMP. That is a caller restriction for Studio/ART tools,
+         not a permission this app can use. Remove both the uses-permission (if a
+         merger ever adds one) and the exported receiver so Play does not see DUMP. -->
+    <uses-permission android:name="android.permission.DUMP" tools:node="remove" />
 
     <application
         android:allowBackup="false"
@@ -24,5 +31,8 @@
         <receiver
             android:name=".ReminderReceiver"
             android:exported="false" />
+        <receiver
+            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+            tools:node="remove" />
     </application>
 </manifest>
