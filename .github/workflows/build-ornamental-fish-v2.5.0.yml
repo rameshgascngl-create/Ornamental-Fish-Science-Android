@@ -1,4 +1,4 @@
-name: Ornamental Fish v2.5.0 signed release
+name: Ornamental Fish v2.5.1 signed release
 
 on:
   workflow_dispatch:
@@ -73,16 +73,18 @@ jobs:
           CERT=$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' release-signing.txt | tr -d ':' | tr '[:lower:]' '[:upper:]' | head -1)
           test "$CERT" = "$EXPECTED_CERT_SHA256"
           "$BUILD_TOOLS/aapt2" dump badging "$APK" | tee release-badging.txt
-          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='250' versionName='2.5.0'" release-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='251' versionName='2.5.1'" release-badging.txt
           ! grep -q "uses-permission: name='android.permission.INTERNET'" release-badging.txt
-          cp "$APK" OrnamentalFish-v2.5.0-PLAY-FIX.apk
-          sha256sum OrnamentalFish-v2.5.0-PLAY-FIX.apk | tee release-sha256.txt
+          ! grep -q "android.permission.DUMP" release-badging.txt
+          ! unzip -l "$APK" | grep -q 'DebugProbesKt.bin'
+          cp "$APK" OrnamentalFish-v2.5.1-PLAY-FIX.apk
+          sha256sum OrnamentalFish-v2.5.1-PLAY-FIX.apk | tee release-sha256.txt
 
       - uses: actions/upload-artifact@v4
         with:
-          name: OrnamentalFish-v2.5.0-PLAY-FIX
+          name: OrnamentalFish-v2.5.1-PLAY-FIX
           path: |
-            OrnamentalFish-v2.5.0-PLAY-FIX.apk
+            OrnamentalFish-v2.5.1-PLAY-FIX.apk
             release-signing.txt
             release-badging.txt
             release-sha256.txt
