@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">அலங்கார மீன் அறிவியல்</string>
+    <string name="nav_home">முகப்பு</string>
+    <string name="nav_atlas">மீன்கள்</string>
+    <string name="nav_learn">பாடம்</string>
+    <string name="nav_quiz">வினா</string>
+    <string name="nav_tools">கருவி</string>
+    <string name="share_title">இனத்தைப் பகிர்</string>
+    <string name="share_failed">பகிர செயலி இல்லை</string>
+    <string name="export_failed">சேமிப்புகளை ஏற்ற முடியவில்லை</string>
+    <string name="tts_unavailable">இந்தக் கருவியில் குரல் இயக்கம் இல்லை</string>
+    <string name="tts_tamil_missing">தமிழ்க் குரல் நிறுவப்படவில்லை</string>
+    <string name="notif_denied">திரும்பப் படிக்க நினைவூட்டலுக்கு அறிவிப்பு அனுமதி வேண்டும்</string>
+    <string name="reminder_set">திரும்பப் படிக்க நினைவூட்டல் அமைக்கப்பட்டது</string>
+    <string name="reminder_channel">படிப்பு நினைவூட்டல்கள்</string>
+    <string name="reminder_default_title">அலங்கார மீன் வினாவை மீள்பார்</string>
+    <string name="reminder_default_body">அலங்கார மீன் அறிவியலைத் திறந்து தவறிய வினாக்களை மீள்பார்.</string>
+</resources>

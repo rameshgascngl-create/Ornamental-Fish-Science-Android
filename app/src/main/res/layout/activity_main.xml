@@ -23,33 +23,15 @@
     <LinearLayout
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
         android:background="@color/navy2"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/nav_home"
-            style="@style/NavTab"
-            android:text="@string/nav_home" />
-
-        <TextView
-            android:id="@+id/nav_atlas"
-            style="@style/NavTab"
-            android:text="@string/nav_atlas" />
-
-        <TextView
-            android:id="@+id/nav_learn"
-            style="@style/NavTab"
-            android:text="@string/nav_learn" />
-
-        <TextView
-            android:id="@+id/nav_quiz"
-            style="@style/NavTab"
-            android:text="@string/nav_quiz" />
-
-        <TextView
-            android:id="@+id/nav_tools"
-            style="@style/NavTab"
-            android:text="@string/nav_tools" />
+        <TextView android:id="@+id/nav_home" style="@style/NavTab" android:text="@string/nav_home" android:contentDescription="@string/nav_home" />
+        <TextView android:id="@+id/nav_atlas" style="@style/NavTab" android:text="@string/nav_atlas" android:contentDescription="@string/nav_atlas" />
+        <TextView android:id="@+id/nav_learn" style="@style/NavTab" android:text="@string/nav_learn" android:contentDescription="@string/nav_learn" />
+        <TextView android:id="@+id/nav_quiz" style="@style/NavTab" android:text="@string/nav_quiz" android:contentDescription="@string/nav_quiz" />
+        <TextView android:id="@+id/nav_tools" style="@style/NavTab" android:text="@string/nav_tools" android:contentDescription="@string/nav_tools" />
     </LinearLayout>
 </LinearLayout>
