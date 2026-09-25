@@ -8,7 +8,7 @@
     <string name="nav_tools">கருவி</string>
     <string name="share_title">இனத்தைப் பகிர்</string>
     <string name="share_failed">பகிர செயலி இல்லை</string>
-    <string name="export_failed">சேமிப்புகளை ஏற்ற முடியவில்லை</string>
+    <string name="export_failed">சேமித்த குறியீடுகளை வெளியே சேமிக்க முடியவில்லை</string>
     <string name="tts_unavailable">இந்தக் கருவியில் குரல் இயக்கம் இல்லை</string>
     <string name="tts_tamil_missing">தமிழ்க் குரல் நிறுவப்படவில்லை</string>
     <string name="notif_denied">திரும்பப் படிக்க நினைவூட்டலுக்கு அறிவிப்பு அனுமதி வேண்டும்</string>
