@@ -23,6 +23,8 @@ jobs:
           bash scripts/fetch-atlas.sh
           (cd app/src/main && sha256sum -c ../../../release-evidence/ACADEMIC_PAYLOAD_SHA256_v2.4.3.txt)
           echo 'ACADEMIC PAYLOAD INTEGRITY: PASS'
+          python3 scripts/stamp-version.py
+          echo 'USER-FACING VERSION STAMP: 2.6.0'
 
       - uses: actions/setup-java@v4
         with:
