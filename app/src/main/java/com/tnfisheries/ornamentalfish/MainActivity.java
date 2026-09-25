@@ -1,6 +1,7 @@
 package com.tnfisheries.ornamentalfish;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,22 +10,24 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-public class MainActivity extends AppCompatActivity {
+/**
+ * Framework-only shell. Native toolbar + bottom tabs satisfy Play
+ * minimum-functionality without AppCompat/Material (those pulled
+ * ProfileInstaller / DUMP and DebugProbesKt.bin into 2.5.x).
+ */
+public class MainActivity extends Activity {
 
     static final String ASSET_HOME = "file:///android_asset/index.html";
+    static final int REQ_CREATE_DOC = 2601;
+    static final int REQ_POST_NOTIF = 2602;
 
     private WebView webView;
-    private BottomNavigationView bottomNav;
     private WebAppInterface jsBridge;
     private boolean syncingNavFromJs;
+    private TextView[] tabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +36,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.app_name);
-        }
+        setActionBar(toolbar);
 
         webView = findViewById(R.id.webview);
-        bottomNav = findViewById(R.id.bottom_nav);
+        setupTabs();
         setupWebView();
-        setupBottomNav();
-        setupBackHandler();
 
         if (savedInstanceState == null) {
             webView.loadUrl(ASSET_HOME);
@@ -57,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setAllowFileAccess(true);
-        s.setAllowContentAccess(true);
+        s.setAllowContentAccess(false);
+        s.setAllowFileAccessFromFileURLs(false);
+        s.setAllowUniversalAccessFromFileURLs(false);
         s.setLoadWithOverviewMode(true);
         s.setUseWideViewPort(true);
 
@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(jsBridge, "Android");
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(@NonNull WebView view,
-                                                    @NonNull WebResourceRequest request) {
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return handleUri(request.getUrl());
             }
 
@@ -76,6 +75,52 @@ public class MainActivity extends AppCompatActivity {
                 return handleUri(Uri.parse(url));
             }
         });
+    }
+
+    private void setupTabs() {
+        tabs = new TextView[] {
+            findViewById(R.id.nav_home),
+            findViewById(R.id.nav_atlas),
+            findViewById(R.id.nav_learn),
+            findViewById(R.id.nav_quiz),
+            findViewById(R.id.nav_tools)
+        };
+        String[] names = { "home", "atlas", "book", "quiz", "tools" };
+        for (int i = 0; i < tabs.length; i++) {
+            final String tab = names[i];
+            tabs[i].setOnClickListener(v -> {
+                if (syncingNavFromJs) return;
+                paintTab(tab);
+                webView.evaluateJavascript(
+                    "window.__setNativeTab && window.__setNativeTab('" + tab + "')",
+                    null);
+            });
+        }
+        paintTab("home");
+    }
+
+    public void selectTabFromJs(String tab) {
+        runOnUiThread(() -> {
+            syncingNavFromJs = true;
+            try {
+                paintTab(tab);
+            } finally {
+                syncingNavFromJs = false;
+            }
+        });
+    }
+
+    private void paintTab(String tab) {
+        String t = tab == null ? "home" : tab;
+        int selected = R.id.nav_home;
+        if ("atlas".equals(t)) selected = R.id.nav_atlas;
+        else if ("book".equals(t)) selected = R.id.nav_learn;
+        else if ("quiz".equals(t)) selected = R.id.nav_quiz;
+        else if ("tools".equals(t)) selected = R.id.nav_tools;
+        for (TextView tv : tabs) {
+            boolean on = tv.getId() == selected;
+            tv.setTextColor(getResources().getColor(on ? R.color.gold_soft : R.color.nav_idle));
+        }
     }
 
     boolean handleUri(Uri uri) {
@@ -93,76 +138,40 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void setupBottomNav() {
-        bottomNav.setOnItemSelectedListener(item -> {
-            if (syncingNavFromJs) return true;
-            int id = item.getItemId();
-            String tab = "home";
-            if (id == R.id.nav_atlas) tab = "atlas";
-            else if (id == R.id.nav_learn) tab = "book";
-            else if (id == R.id.nav_quiz) tab = "quiz";
-            else if (id == R.id.nav_tools) tab = "tools";
-            final String jsTab = tab;
-            webView.post(() -> webView.evaluateJavascript(
-                    "window.__setNativeTab && window.__setNativeTab('" + jsTab + "')",
-                    null));
-            return true;
-        });
-    }
-
-    public void selectTabFromJs(String tab) {
-        final int id;
-        switch (tab == null ? "home" : tab) {
-            case "atlas":
-                id = R.id.nav_atlas;
-                break;
-            case "book":
-                id = R.id.nav_learn;
-                break;
-            case "quiz":
-                id = R.id.nav_quiz;
-                break;
-            case "tools":
-                id = R.id.nav_tools;
-                break;
-            default:
-                id = R.id.nav_home;
-                break;
-        }
-        runOnUiThread(() -> {
-            syncingNavFromJs = true;
-            try {
-                bottomNav.setSelectedItemId(id);
-            } finally {
-                syncingNavFromJs = false;
-            }
-        });
-    }
-
-    private void setupBackHandler() {
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                webView.evaluateJavascript(
-                        "(function(){try{return !!(window.__appBack && window.__appBack());}"
-                                + "catch(e){return false;}})()",
-                        value -> {
-                            boolean handled = "true".equalsIgnoreCase(String.valueOf(value));
-                            if (handled) return;
-                            if (webView.canGoBack()) {
-                                webView.goBack();
-                            } else {
-                                setEnabled(false);
-                                getOnBackPressedDispatcher().onBackPressed();
-                                setEnabled(true);
-                            }
-                        });
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        webView.evaluateJavascript(
+            "(function(){try{return !!(window.__appBack && window.__appBack());}"
+                + "catch(e){return false;}})()",
+            value -> {
+                boolean handled = "true".equalsIgnoreCase(String.valueOf(value));
+                if (handled) return;
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    finish();
+                }
+            });
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (jsBridge != null) {
+            jsBridge.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (jsBridge != null) {
+            jsBridge.onRequestPermissionsResult(requestCode, grantResults);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
@@ -171,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (jsBridge != null) jsBridge.shutdown();
         if (webView != null) {
+            webView.removeJavascriptInterface("Android");
             webView.stopLoading();
             webView.destroy();
         }
