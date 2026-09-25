@@ -3,21 +3,23 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-READ_JSON = """  function readJson(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return fallback;
-      return JSON.parse(raw);
-    } catch (e) { return fallback; }
-  }
-"""
-
-OLD_PARSE = (
-    'marks: JSON.parse(localStorage.getItem("of_marks") || "[]"),\n'
-    '    answered: JSON.parse(localStorage.getItem("of_answered") || "{}"),'
+READ_JSON = (
+    "  function readJson(key, fallback) {\n"
+    "    try {\n"
+    "      const raw = localStorage.getItem(key);\n"
+    "      if (!raw) return fallback;\n"
+    "      return JSON.parse(raw);\n"
+    "    } catch (e) { return fallback; }\n"
+    "  }\n"
 )
-NEW_PARSE = 'marks: readJson("of_marks", []),
-    answered: readJson("of_answered", {}),' 
+OLD_PARSE = (
+    "marks: JSON.parse(localStorage.getItem(\"of_marks\") || \"[]\"),\n"
+    "    answered: JSON.parse(localStorage.getItem(\"of_answered\") || \"{}\"),"
+)
+NEW_PARSE = (
+    "marks: readJson(\"of_marks\", []),\n"
+    "    answered: readJson(\"of_answered\", {}),"
+)
 
 
 def stamp(path: Path) -> None:
@@ -38,12 +40,7 @@ def main() -> None:
     assets = ROOT / "app/src/main/assets"
     stamp(assets / "index.html")
     stamp(assets / "js/app.js")
-    # boot.js version label only; do not rewrite the frozen species snapshot.
-    boot = assets / "js/boot.js"
-    if boot.exists():
-        text = boot.read_text(encoding="utf-8")
-        # leave embedded payload hashes alone; only the banner string if present
-        print("boot.js left at frozen academic snapshot")
+    print("boot.js left at frozen academic snapshot")
 
 
 if __name__ == "__main__":
