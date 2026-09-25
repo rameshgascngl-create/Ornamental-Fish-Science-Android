@@ -1,21 +1,21 @@
-# Ornamental Fish Science — Android v2.6.0
+# Ornamental Fish Science — Android v2.6.1
 
 Offline educational app (`com.tnfisheries.ornamentalfish`).
 
-v2.6.0 keeps the native chrome Play asked for (toolbar, bottom tabs, Back,
+v2.6.1 keeps the native chrome Play asked for (toolbar, bottom tabs, Back,
 TTS, share, reminder, bookmark export) and **drops AppCompat / Material**.
 Those libraries were pulling `ProfileInstallReceiver` (DUMP guard) and
 `DebugProbesKt.bin` into the 2.5.x Play APK.
 
-## What 2.6.0 changes
+## What 2.6.1 changes
 - Framework `Activity` + `Toolbar` + five-tab bar (no AndroidX)
 - Same `window.Android` bridge and `window.__appBack()` Back handling
-- `versionName` **2.6.0** / `versionCode` **260**
+- `versionName` **2.6.1** / `versionCode` **261**
 - Release minify on; packaging excludes `DebugProbesKt.bin`
 - Academic payload still restored by `scripts/fetch-atlas.sh`
 
 ## Open in Android Studio
-1. Clone this repository (branch `v2.6.0-structured` or `main` after merge).
+1. Clone this repository (branch `v2.6.1-structured` or `main` after merge).
 2. Restore atlas images:
 
        bash scripts/fetch-atlas.sh
@@ -24,7 +24,7 @@ Those libraries were pulling `ProfileInstallReceiver` (DUMP guard) and
 4. Sign the release build with the existing `ornamentalfish` keystore.
 
 ## GitHub Actions
-Workflow **Ornamental Fish v2.6.0 signed release** uses the same secrets as 2.5.x:
+Workflow **Ornamental Fish v2.6.1 signed release** uses the same secrets as 2.5.x:
 - `OFISH_KEYSTORE_BASE64`
 - `OFISH_KEYSTORE_PASSWORD`
 - `OFISH_KEY_ALIAS` = `ornamentalfish`
