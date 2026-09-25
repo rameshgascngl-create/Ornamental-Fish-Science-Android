@@ -10,8 +10,8 @@ android {
         applicationId 'com.tnfisheries.ornamentalfish'
         minSdk 24
         targetSdk 36
-        versionCode 260
-        versionName '2.6.0'
+        versionCode 261
+        versionName '2.6.1'
     }
 
     signingConfigs {
@@ -60,3 +60,9 @@ android {
 // (DUMP-guarded receiver) and can leak DebugProbesKt.bin.
 dependencies {
 }
+
+tasks.register('makeLauncherIcons', Exec) {
+    workingDir rootDir
+    commandLine 'python3', 'scripts/make-launcher-icons.py'
+}
+preBuild.dependsOn makeLauncherIcons
