@@ -24,7 +24,8 @@ jobs:
           (cd app/src/main && sha256sum -c ../../../release-evidence/ACADEMIC_PAYLOAD_SHA256_v2.4.3.txt)
           echo 'ACADEMIC PAYLOAD INTEGRITY: PASS'
           python3 scripts/stamp-version.py
-          echo 'USER-FACING VERSION STAMP: 2.6.1'
+          python3 scripts/tn-textbook-tamil.py
+          echo 'USER-FACING VERSION STAMP: 2.6.1 + TN textbook Tamil'
           python3 -m pip install --break-system-packages -q pillow || true
           python3 scripts/make-launcher-icons.py
 
