@@ -26,4 +26,4 @@ fi
 if [ -f "$ROOT/scripts/apply-v250-overlay.py" ]; then
   python3 "$ROOT/scripts/apply-v250-overlay.py"
 fi
-echo "Academic payload restored."
+echo "Academic payload restored; integrity must be verified before v2.6.1 stamping."
