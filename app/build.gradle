@@ -10,8 +10,8 @@ android {
         applicationId 'com.tnfisheries.ornamentalfish'
         minSdk 24
         targetSdk 36
-        versionCode 251
-        versionName '2.5.1'
+        versionCode 260
+        versionName '2.6.0'
     }
 
     signingConfigs {
@@ -31,8 +31,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (System.getenv('OFISH_KEYSTORE_FILE')) {
                 signingConfig signingConfigs.release
             }
@@ -48,14 +49,14 @@ android {
         resources {
             excludes += [
                 'DebugProbesKt.bin',
-                'META-INF/*.kotlin_module'
+                'META-INF/*.kotlin_module',
+                'kotlin-tooling-metadata.json'
             ]
         }
     }
 }
 
+// Framework-only. AppCompat / Material pull ProfileInstaller
+// (DUMP-guarded receiver) and can leak DebugProbesKt.bin.
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.activity:activity:1.9.3'
-    implementation 'com.google.android.material:material:1.12.0'
 }
