@@ -25,7 +25,8 @@ if [ ! -f "$ROOT/app/src/main/assets/index.html" ]; then
 fi
 if [ -f "$ROOT/scripts/apply-v250-overlay.py" ]; then
   python3 "$ROOT/scripts/apply-v250-overlay.py"
-else
-  echo "NOTE: scripts/apply-v250-overlay.py not in tree yet; app.js is still v2.4.4 until that file is added."
 fi
-echo "Academic payload restored."
+if [ -f "$ROOT/scripts/stamp-version.py" ]; then
+  python3 "$ROOT/scripts/stamp-version.py"
+fi
+echo "Academic payload restored and stamped 2.6.0."
