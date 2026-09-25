@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stamp user-facing 2.6.0 after integrity check. Do not run before sha256sum."""
+"""Stamp user-facing 2.6.1 after integrity check. Do not run before sha256sum."""
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,7 +27,7 @@ def stamp(path: Path) -> None:
         return
     text = path.read_text(encoding="utf-8")
     orig = text
-    text = text.replace("2.5.0", "2.6.0").replace("2.4.4", "2.6.0")
+    text = text.replace("2.6.0", "2.6.1").replace("2.5.0", "2.6.1").replace("2.4.4", "2.6.1")
     if path.name == "app.js" and "function readJson" not in text and OLD_PARSE in text:
         text = text.replace(OLD_PARSE, NEW_PARSE, 1)
         text = text.replace("  function save() {", READ_JSON + "  function save() {", 1)
