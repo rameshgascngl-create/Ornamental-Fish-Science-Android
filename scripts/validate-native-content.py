@@ -98,9 +98,11 @@ for s in species:
         die(f"species {sid}: scientific name is not binomial-like: {s['sci']}")
 
     tamil_language_fields = [
-        k for k in SPECIES_REQUIRED
-        if k.startswith("ta_") and k not in {"ta_ph"}
-    ] + ["ta"]
+        "ta","ta_native","ta_status_in","ta_life_yr","ta_temper",
+        "ta_tank_min_l","ta_group","ta_temp_hold_c","ta_temp_breed_c",
+        "ta_salinity","ta_diet","ta_breed","ta_sex","ta_fry",
+        "ta_compat","ta_disease","ta_quarantine","ta_iucn"
+    ]
     for key in tamil_language_fields:
         value = str(s.get(key,"")).strip()
         if len(value) > 4 and not contains_tamil(value):
