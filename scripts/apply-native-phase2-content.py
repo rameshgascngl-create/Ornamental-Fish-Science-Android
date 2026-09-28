@@ -210,6 +210,8 @@ book_by_id["t1"]["ta"] = book_by_id["t1"]["ta"].replace(
     "மருந்துப் பெயரும் அளவும் பொதுவான மருந்தளவு வழிமுறையாக அச்சிடப்படவில்லை.",
     "மருந்துச் சிகிச்சையும் அளவும் தகுதிவாய்ந்த நீரியல் கால்நடை மருத்துவர் அல்லது மீன்வள நிபுணர் ஆலோசனையைப் பின்பற்ற வேண்டும்.",
 )
+book_by_id["iii1"]["en"] = book_by_id["iii1"]["en"].replace("Hydrilla = வேலம்பாசி (cuttings). ", "Hydrilla is propagated by stem cuttings. ")
+
 book_by_id["ii3"]["en"] = book_by_id["ii3"]["en"].replace(
     "Curriculum first feeds: infusoria then larger live food.",
     "Suitable first feeds include infusoria followed by larger live foods as the fry grow.",
