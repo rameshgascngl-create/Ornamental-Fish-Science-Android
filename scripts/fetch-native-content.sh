@@ -21,4 +21,4 @@ cp "$SRC/res/drawable/app_icon.png" "$ROOT/app/src/main/res/drawable/app_icon.pn
 rm -f "$ROOT/app/src/main/assets/index.html" "$ROOT/app/src/main/assets/privacy-policy.html"
 rm -rf "$ROOT/app/src/main/assets/js" "$ROOT/app/src/main/assets/css"
 
-echo "Native academic payload prepared: JSON + atlas images only."
+python3 "$ROOT/scripts/apply-native-phase2-content.py"\n\necho "Native academic payload prepared and Phase-2 editorial overlay applied: JSON + atlas images only."
