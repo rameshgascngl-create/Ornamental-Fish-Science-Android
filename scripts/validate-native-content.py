@@ -97,7 +97,11 @@ for s in species:
     if not re.match(r"^[A-Z][a-zA-Z-]+\s+[a-z][a-zA-Z-]+", s["sci"].strip()):
         die(f"species {sid}: scientific name is not binomial-like: {s['sci']}")
 
-    for key in [k for k in SPECIES_REQUIRED if k.startswith("ta_")] + ["ta"]:
+    tamil_language_fields = [
+        k for k in SPECIES_REQUIRED
+        if k.startswith("ta_") and k not in {"ta_ph"}
+    ] + ["ta"]
+    for key in tamil_language_fields:
         value = str(s.get(key,"")).strip()
         if len(value) > 4 and not contains_tamil(value):
             die(f"species {sid}: Tamil field {key} lacks Tamil text")
