@@ -1,6 +1,6 @@
 # Ornamental Fish Native v3 — Phase-3 Device QA Gate
 
-This checklist applies to the installable `3.0.0-alpha4-qa / 303` build only.
+This checklist applies to the installable `3.0.0-alpha5-qa / 304` build only.
 Production signing and store submission are blocked until every P0/P1 item passes.
 
 ## 1. Installation and identity
