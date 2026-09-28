@@ -138,7 +138,7 @@ internal fun OrnamentalFishNativeApp(
                             icon = {
                                 Icon(
                                     painter = painterResource(item.iconRes),
-                                    contentDescription = description,
+                                    contentDescription = null,
                                     modifier = Modifier.size(22.dp)
                                 )
                             },
@@ -676,7 +676,7 @@ private fun NativeAssetImage(
         if (bitmap != null) {
             Image(
                 bitmap = bitmap,
-                contentDescription = null,
+                contentDescription = description,
                 modifier = Modifier.fillMaxSize().padding(if (fit) 4.dp else 0.dp),
                 contentScale = if (fit) ContentScale.Fit else ContentScale.Crop
             )
