@@ -18,7 +18,9 @@ cp -a "$SRC/assets/data/." "$ROOT/app/src/main/assets/data/"
 cp -a "$SRC/assets/fish_atlas/." "$ROOT/app/src/main/assets/fish_atlas/"
 cp "$SRC/res/drawable/app_icon.png" "$ROOT/app/src/main/res/drawable/app_icon.png"
 
+python3 "$ROOT/scripts/phase2-content-polish.py"
+
 rm -f "$ROOT/app/src/main/assets/index.html" "$ROOT/app/src/main/assets/privacy-policy.html"
 rm -rf "$ROOT/app/src/main/assets/js" "$ROOT/app/src/main/assets/css"
 
-echo "Native academic payload prepared: JSON + atlas images only."
+echo "Native Phase-2 payload prepared: verified source + bilingual content polish + atlas images only."
