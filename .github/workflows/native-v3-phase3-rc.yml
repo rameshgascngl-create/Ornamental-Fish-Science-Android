@@ -1,0 +1,112 @@
+name: Ornamental Fish native v3 Phase 3 RC hardening
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - native/v3.0.0-phase3-rc-hardening-20260928
+
+permissions:
+  contents: read
+
+jobs:
+  rc-hardening:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Install Android 36 SDK
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Restore verified source and apply learner-facing content polish
+        run: bash scripts/fetch-native-content.sh
+
+      - name: Validate native scientific/bilingual payload
+        run: python3 scripts/validate-native-content.py
+
+      - name: Architecture and manifest release gates
+        run: |
+          set -euo pipefail
+          test ! -e app/src/main/assets/index.html
+          test ! -d app/src/main/assets/js
+          test ! -d app/src/main/assets/css
+          ! grep -R --line-number -E 'android\.webkit\.WebView|addJavascriptInterface|loadUrl\(' app/src/main/java 2>/dev/null
+          ! grep -q 'android:configChanges=' app/src/main/AndroidManifest.xml
+          ! grep -q 'android.permission.INTERNET' app/src/main/AndroidManifest.xml
+          echo 'ARCHITECTURE/MANIFEST GATE: PASS'
+
+      - name: Compile debug QA APK
+        run: gradle --no-daemon clean :app:assembleDebug
+
+      - name: Android lint
+        run: gradle --no-daemon :app:lintDebug
+
+      - name: Build minified unsigned release dry-run
+        run: gradle --no-daemon :app:assembleRelease
+
+      - name: Verify debug QA artifact
+        run: |
+          set -euo pipefail
+          APK=$(find app/build/outputs/apk/debug -name '*.apk' | head -1)
+          test -n "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$APK" | tee phase3-debug-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish.nativeqa' versionCode='302' versionName='3.0.0-alpha3-qa'" phase3-debug-badging.txt
+          unzip -l "$APK" | grep -q 'assets/data/species.json'
+          unzip -l "$APK" | grep -q 'assets/fish_atlas/'
+          ! unzip -l "$APK" | grep -Eq 'assets/(index\.html|js/|css/)'
+          ! grep -a -R -q 'android/webkit/WebView' "$APK"
+          cp "$APK" OrnamentalFish-v3.0.0-alpha3-nativeQA.apk
+          sha256sum OrnamentalFish-v3.0.0-alpha3-nativeQA.apk | tee phase3-debug-sha256.txt
+
+      - name: Verify minified release dry-run
+        run: |
+          set -euo pipefail
+          APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
+          test -n "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$APK" | tee phase3-release-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='302' versionName='3.0.0-alpha3'" phase3-release-badging.txt
+          ! grep -q 'application-debuggable' phase3-release-badging.txt
+          ! grep -q "uses-permission: name='android.permission.INTERNET'" phase3-release-badging.txt
+          ! grep -q "uses-permission: name='android.permission.CAMERA'" phase3-release-badging.txt
+          ! grep -q "uses-permission: name='android.permission.READ_EXTERNAL_STORAGE'" phase3-release-badging.txt
+          ! grep -q "uses-permission: name='android.permission.WRITE_EXTERNAL_STORAGE'" phase3-release-badging.txt
+          unzip -l "$APK" | grep -q 'assets/data/species.json'
+          unzip -l "$APK" | grep -q 'assets/fish_atlas/'
+          ! unzip -l "$APK" | grep -Eq 'assets/(index\.html|js/|css/)'
+          TMP=$(mktemp -d)
+          unzip -q "$APK" 'classes*.dex' -d "$TMP"
+          ! grep -a -R -q 'android/webkit/WebView' "$TMP"
+          test -s app/build/outputs/mapping/release/mapping.txt
+          cp app/build/outputs/mapping/release/mapping.txt phase3-release-r8-mapping.txt
+          sha256sum "$APK" | tee phase3-release-unsigned-sha256.txt
+          echo 'MINIFIED RELEASE DRY-RUN: PASS'
+
+      - name: Upload Phase-3 QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: OrnamentalFish-v3.0.0-alpha3-nativeQA
+          path: |
+            OrnamentalFish-v3.0.0-alpha3-nativeQA.apk
+            phase3-debug-badging.txt
+            phase3-debug-sha256.txt
+            phase3-release-badging.txt
+            phase3-release-unsigned-sha256.txt
+            phase3-release-r8-mapping.txt
+            app/build/reports/lint-results-debug.html
+            app/build/reports/lint-results-debug.txt
