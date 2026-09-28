@@ -5,7 +5,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:allowBackup="false"\n        android:fullBackupContent="false"\n        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:usesCleartextTraffic="false"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="unspecified"
             android:theme="@style/Theme.OrnamentalFish.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -22,9 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".ReminderReceiver"
             android:exported="false" />
+
         <receiver
             android:name=".BootReceiver"
             android:exported="false">
