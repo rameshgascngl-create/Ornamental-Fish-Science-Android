@@ -19,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -192,7 +193,7 @@ internal fun NativeQuizScreen(
         LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             item {
                 val pct = score * 100 / questions.size
-                Text(if (tamil) "வினா முடிவு" else "Quiz result", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                Text(if (tamil) "வினாடி வினா முடிவு" else "Quiz result", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                 Text((if (tamil) "மதிப்பெண் " else "Score ") + score + " / " + questions.size + " (" + pct + "%)")
                 Text((if (tamil) "விடையளித்தவை " else "Answered ") + answered.size + " / " + questions.size)
             }
@@ -220,8 +221,8 @@ internal fun NativeQuizScreen(
                     OutlinedButton(onClick = {
                         scheduleReminder(
                             24,
-                            if (tamil) "அலங்கார மீன் வினாவை மீள்பார்" else "Revise ornamental fish quiz",
-                            if (tamil) "தவறிய வினாக்களை மீள்பார்." else "Review the questions you missed."
+                            if (tamil) "அலங்கார மீன் வினாடி வினாவை மீள்பார்க்கவும்" else "Revise the ornamental fish quiz",
+                            if (tamil) "மேலும் பயிற்சி தேவைப்படும் வினாக்களை மீண்டும் படிக்கவும்." else "Review the questions that need more practice."
                         )
                     }) { Text(if (tamil) "நாளை நினைவூட்டு" else "Remind tomorrow") }
                 }
@@ -237,9 +238,25 @@ internal fun NativeQuizScreen(
         Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(q.type.uppercase(Locale.ROOT) + " " + (index + 1) + "/" + questions.size)
-        Text((if (tamil) "மதிப்பெண் " else "Score ") + score + " / " + answered.size)
-        Text(if (tamil) q.taQuestion else q.enQuestion, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                (if (tamil) "வினா " else "Question ") + (index + 1) + " / " + questions.size,
+                style = MaterialTheme.typography.labelLarge
+            )
+            Text(
+                (if (tamil) "மதிப்பெண் " else "Score ") + score + " / " + answered.size,
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+        LinearProgressIndicator(
+            progress = { (index + 1).toFloat() / questions.size.toFloat() },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text(
+            if (tamil) q.taQuestion else q.enQuestion,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
 
         options.forEachIndexed { optionIndex, option ->
             val correct = picked != null && optionIndex == q.answer
@@ -302,6 +319,18 @@ private fun saveNativeQuizAnswers(prefs: SharedPreferences, answers: Map<Int, In
 @Composable
 internal fun NativeToolsScreen(tamil: Boolean) {
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        item {
+            Text(
+                if (tamil) "கணக்கீட்டு கருவிகள்" else "Aquarium and farm tools",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                if (tamil) "கற்பித்தல் மற்றும் திட்டமிடலுக்கான கணக்கீடுகள். நீர்தர முடிவுகளை ஆய்வகப் பரிசோதனைக்கு மாற்றாகக் கருத வேண்டாம்."
+                else "Calculators for teaching and planning. Water-quality estimates do not replace laboratory measurements.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
         item { NativeVolumeCalculator(tamil) }
         item { NativeAmmoniaCalculator(tamil) }
         item { NativeWaterChangeCalculator(tamil) }
@@ -341,8 +370,8 @@ private fun NativeAmmoniaCalculator(tamil: Boolean) {
     var out by rememberSaveable { mutableStateOf("") }
     NativeCalculatorCard(if (tamil) "TAN-இலிருந்து அயனியாகாத NH₃" else "Unionised NH₃ from TAN") {
         Text(
-            if (tamil) "Emerson et al. (1975) அடிப்படையிலான கற்பித்தல் கருவி; ஆய்வகச் சான்று அல்ல."
-            else "Teaching tool using Emerson et al. (1975); not a certified laboratory result.",
+            if (tamil) "அமோனியா சமநிலையை அடிப்படையாகக் கொண்ட கற்பித்தல் கணிப்பு; இது ஆய்வக அளவீடு அல்ல."
+            else "Teaching estimate based on ammonia equilibrium; this is not a laboratory measurement.",
             style = MaterialTheme.typography.bodySmall
         )
         NativeNumberField("TAN (mg/L as N)", tan) { tan = it }
@@ -364,7 +393,7 @@ private fun NativeAmmoniaCalculator(tamil: Boolean) {
                         " · NH₃-N " + "%.3f".format(Locale.US, a * fraction) + " mg/L"
                 }
             }
-        }) { Text(if (tamil) "விளக்கு" else "Interpret") }
+        }) { Text(if (tamil) "கணக்கிடு" else "Calculate") }
         if (out.isNotBlank()) Text(out)
     }
 }
@@ -375,7 +404,7 @@ private fun NativeWaterChangeCalculator(tamil: Boolean) {
     var pct by rememberSaveable { mutableStateOf("30") }
     var out by rememberSaveable { mutableStateOf("") }
     NativeCalculatorCard(if (tamil) "நீர் மாற்ற அளவு" else "Water-change volume") {
-        NativeNumberField(if (tamil) "தொட்டி லிட்டர்" else "Aquarium volume L", litres) { litres = it }
+        NativeNumberField(if (tamil) "மீன் தொட்டி கொள்ளளவு (லி.)" else "Aquarium volume (L)", litres) { litres = it }
         NativeNumberField(if (tamil) "மாற்ற %" else "Change %", pct) { pct = it }
         Button(onClick = {
             val l = litres.toDoubleOrNull()
@@ -402,7 +431,7 @@ private fun NativeEconomicsCalculator(tamil: Boolean) {
 
     NativeCalculatorCard(if (tamil) "பண்ணைப் பொருளாதாரம்" else "Farm economics") {
         NativeNumberField("CAPEX ₹", cap) { cap = it }
-        NativeNumberField(if (tamil) "சொத்து ஆயுள் ஆண்டு" else "Asset life years", life) { life = it }
+        NativeNumberField(if (tamil) "சொத்து பயன்பாட்டு காலம் (ஆண்டு)" else "Asset life (years)", life) { life = it }
         NativeNumberField("OPEX ₹", op) { op = it }
         NativeNumberField(if (tamil) "ஆண்டு உற்பத்தி" else "Annual production", prod) { prod = it }
         NativeNumberField(if (tamil) "விலை ₹ / அலகு" else "Price ₹ / unit", price) { price = it }
@@ -427,7 +456,7 @@ private fun NativeEconomicsCalculator(tamil: Boolean) {
                 val profit = revenue - o
                 val roi = if (c == 0.0) 0.0 else profit / c * 100.0
                 val bc = if (depreciation + o == 0.0) 0.0 else revenue / (depreciation + o)
-                (if (tamil) "விற்கும் அலகு " else "Saleable units ") + sold.toInt() +
+                (if (tamil) "விற்பனைக்கான அலகுகள் " else "Saleable units ") + sold.toInt() +
                     " · " + (if (tamil) "வருவாய் ₹" else "revenue ₹") + revenue.toInt() +
                     " · " + (if (tamil) "லாபம் ₹" else "profit ₹") + profit.toInt() +
                     " · ROI " + "%.1f".format(Locale.US, roi) + "% · B:C " + "%.2f".format(Locale.US, bc)
