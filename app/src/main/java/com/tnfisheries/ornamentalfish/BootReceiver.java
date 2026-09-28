@@ -12,6 +12,6 @@ public class BootReceiver extends BroadcastReceiver {
                 && !"android.intent.action.LOCKED_BOOT_COMPLETED".equals(intent.getAction())) {
             return;
         }
-        WebAppInterface.restoreScheduledReminder(context);
+        NativeServices.restoreScheduledReminder(context);
     }
 }
