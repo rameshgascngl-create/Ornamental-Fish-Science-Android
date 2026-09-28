@@ -46,7 +46,8 @@ jobs:
           test ! -e app/src/main/assets/index.html
           test ! -d app/src/main/assets/js
           test ! -d app/src/main/assets/css
-          ! grep -R --line-number -E 'android\.webkit\.WebView|addJavascriptInterface|loadUrl\(' app/src/main/java 2>/dev/null
+          ! grep -R --line-number -E '(<WebView|android\.webkit|android/webkit|addJavascriptInterface|loadUrl\(|index\.html)' app/src/main 2>/dev/null
+          test ! -e app/src/main/res/drawable/app_icon.png
           ! grep -q 'android:configChanges=' app/src/main/AndroidManifest.xml
           ! grep -q 'android.permission.INTERNET' app/src/main/AndroidManifest.xml
           echo 'ARCHITECTURE/MANIFEST GATE: PASS'
