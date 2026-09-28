@@ -67,13 +67,13 @@ jobs:
           APK=$(find app/build/outputs/apk/debug -name '*.apk' | head -1)
           test -n "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$APK" | tee phase3-debug-badging.txt
-          grep -q "package: name='com.tnfisheries.ornamentalfish.nativeqa' versionCode='302' versionName='3.0.0-alpha3-qa'" phase3-debug-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish.nativeqa' versionCode='303' versionName='3.0.0-alpha4-qa'" phase3-debug-badging.txt
           unzip -l "$APK" | grep -q 'assets/data/species.json'
           unzip -l "$APK" | grep -q 'assets/fish_atlas/'
           ! unzip -l "$APK" | grep -Eq 'assets/(index\.html|js/|css/)'
           ! grep -a -R -q 'android/webkit/WebView' "$APK"
-          cp "$APK" OrnamentalFish-v3.0.0-alpha3-nativeQA.apk
-          sha256sum OrnamentalFish-v3.0.0-alpha3-nativeQA.apk | tee phase3-debug-sha256.txt
+          cp "$APK" OrnamentalFish-v3.0.0-alpha4-nativeQA.apk
+          sha256sum OrnamentalFish-v3.0.0-alpha4-nativeQA.apk | tee phase3-debug-sha256.txt
 
       - name: Verify minified release dry-run
         run: |
@@ -81,7 +81,7 @@ jobs:
           APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
           test -n "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$APK" | tee phase3-release-badging.txt
-          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='302' versionName='3.0.0-alpha3'" phase3-release-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='303' versionName='3.0.0-alpha4'" phase3-release-badging.txt
           ! grep -q 'application-debuggable' phase3-release-badging.txt
           ! grep -q "uses-permission: name='android.permission.INTERNET'" phase3-release-badging.txt
           ! grep -q "uses-permission: name='android.permission.CAMERA'" phase3-release-badging.txt
@@ -101,9 +101,9 @@ jobs:
       - name: Upload Phase-3 QA evidence
         uses: actions/upload-artifact@v4
         with:
-          name: OrnamentalFish-v3.0.0-alpha3-nativeQA
+          name: OrnamentalFish-v3.0.0-alpha4-nativeQA
           path: |
-            OrnamentalFish-v3.0.0-alpha3-nativeQA.apk
+            OrnamentalFish-v3.0.0-alpha4-nativeQA.apk
             phase3-debug-badging.txt
             phase3-debug-sha256.txt
             phase3-release-badging.txt
