@@ -1,7 +1,6 @@
 package com.tnfisheries.ornamentalfish
 
 import android.content.SharedPreferences
-import android.text.Html
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,8 +68,12 @@ internal fun NativeLearnScreen(
                 items(labs, key = { it.id }) { lab ->
                     Card(Modifier.fillMaxWidth()) {
                         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(if (tamil) lab.taTitle else lab.enTitle, fontWeight = FontWeight.Bold)
-                            Text(nativeHtmlToText(if (tamil) lab.taHtml else lab.enHtml))
+                            Text(
+                                if (tamil) lab.taTitle else lab.enTitle,
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            NativeRichText(if (tamil) lab.taHtml else lab.enHtml)
                         }
                     }
                 }
@@ -111,9 +114,13 @@ internal fun NativeLearnScreen(
                     OutlinedButton(onClick = { contents = true }) { Text(if (tamil) "உள்ளடக்கம்" else "Contents") }
                     Text((safe + 1).toString() + " / " + book.size, modifier = Modifier.padding(top = 12.dp))
                 }
-                Text(page.chapter, style = MaterialTheme.typography.labelMedium)
-                Text(if (tamil) page.taTitle else page.enTitle, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Text(nativeHtmlToText(if (tamil) page.taHtml else page.enHtml), style = MaterialTheme.typography.bodyLarge)
+                NativeUnitLabel(page.chapter, tamil)
+                Text(
+                    if (tamil) page.taTitle else page.enTitle,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                NativeRichText(if (tamil) page.taHtml else page.enHtml)
                 Spacer(Modifier.height(8.dp))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     OutlinedButton(
@@ -136,8 +143,28 @@ internal fun NativeLearnScreen(
     }
 }
 
-private fun nativeHtmlToText(html: String): String =
-    Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString().trim()
+@Composable
+private fun NativeUnitLabel(chapter: String, tamil: Boolean) {
+    val label = when (chapter.uppercase()) {
+        "I", "II", "III", "IV", "V" -> (if (tamil) "அலகு " else "Unit ") + chapter.uppercase()
+        "IN" -> if (tamil) "இந்திய மீன்கள்" else "Indian fishes"
+        "AN" -> if (tamil) "உடலமைப்பு" else "Anatomy"
+        "W" -> if (tamil) "நலவியல்" else "Welfare"
+        "REV" -> if (tamil) "மீள்பார்வை" else "Revision"
+        else -> chapter
+    }
+    androidx.compose.material3.Surface(
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(50)
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+        )
+    }
+}
 
 @Composable
 internal fun NativeQuizScreen(
