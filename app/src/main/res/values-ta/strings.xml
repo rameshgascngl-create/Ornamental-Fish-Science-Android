@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">அலங்கார மீன் அறிவியல்</string>
-    <string name="nav_home">முகப்பு</string>
-    <string name="nav_atlas">மீன்கள்</string>
-    <string name="nav_learn">பாடம்</string>
-    <string name="nav_quiz">வினா</string>
-    <string name="nav_tools">கருவி</string>
-    <string name="share_title">இனத்தைப் பகிர்</string>
-    <string name="share_failed">பகிர செயலி இல்லை</string>
-    <string name="export_failed">சேமித்த குறியீடுகளை வெளியே சேமிக்க முடியவில்லை</string>
-    <string name="tts_unavailable">இந்தக் கருவியில் குரல் இயக்கம் இல்லை</string>
-    <string name="tts_tamil_missing">தமிழ்க் குரல் நிறுவப்படவில்லை</string>
-    <string name="notif_denied">திரும்பப் படிக்க நினைவூட்டலுக்கு அறிவிப்பு அனுமதி வேண்டும்</string>
-    <string name="reminder_set">திரும்பப் படிக்க நினைவூட்டல் அமைக்கப்பட்டது</string>
+    <string name="share_title">இன விவரத்தைப் பகிர்</string>
+    <string name="share_failed">பகிர்வதற்கான செயலி கிடைக்கவில்லை</string>
+    <string name="export_failed">சேமித்த இனப் பட்டியலை ஏற்றுமதி செய்ய முடியவில்லை</string>
+    <string name="tts_unavailable">இந்தச் சாதனத்தில் குரல் ஒலிப்பு வசதி இல்லை</string>
+    <string name="tts_tamil_missing">தமிழ்க் குரல் தொகுப்பு நிறுவப்படவில்லை</string>
+    <string name="notif_denied">மீள்பார்வை நினைவூட்டலுக்கு அறிவிப்பு அனுமதி தேவை</string>
+    <string name="reminder_set">மீள்பார்வை நினைவூட்டல் அமைக்கப்பட்டது</string>
     <string name="reminder_channel">படிப்பு நினைவூட்டல்கள்</string>
-    <string name="reminder_default_title">அலங்கார மீன் வினாவை மீள்பார்</string>
-    <string name="reminder_default_body">அலங்கார மீன் அறிவியலைத் திறந்து தவறிய வினாக்களை மீள்பார்.</string>
+    <string name="reminder_default_title">அலங்கார மீன் வினாக்களை மீள்பார்க்கவும்</string>
+    <string name="reminder_default_body">தவறிய வினாக்களையும் அவற்றின் விளக்கங்களையும் மீண்டும் பார்க்கவும்.</string>
 </resources>

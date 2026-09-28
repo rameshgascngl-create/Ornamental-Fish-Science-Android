@@ -88,6 +88,25 @@ LAB_TITLES = {
  "eco":("Farm Economics Worksheet","பண்ணைப் பொருளாதாரப் பயிற்சித்தாள்")
 }
 
+LAB_BODIES = {
+ "vol":(
+  "<p><b>Aim:</b> Estimate the working water volume of a rectangular aquarium.</p><p><b>Principle:</b> V (L) = internal length × internal width × water height (cm) ÷ 1000. Allow separately for substrate and freeboard.</p><p><b>Materials:</b> Measuring tape and calculator.</p><p><b>Procedure:</b> Measure the internal length, internal width and actual water height rather than the outside glass dimensions.</p><p><b>Result:</b> Verify the value using the Volume calculator under Tools.</p><p><b>Precautions:</b> Cylindrical and bow-front aquaria require different formulae. Avoid simplistic inch-per-gallon stocking rules.</p><p><b>Viva:</b> Why is actual water height used instead of total tank height?</p>",
+  "<p><b>நோக்கம்:</b> செவ்வக மீன் காட்சித் தொட்டியின் பயன்பாட்டு நீரளவை மதிப்பிடுதல்.</p><p><b>கோட்பாடு:</b> நீரளவு (லிட்டர்) = உள் நீளம் × உள் அகலம் × நீர் உயரம் (செ.மீ.) ÷ 1000. அடிமண் மற்றும் மேற்புற காலியிடத்திற்கான அளவைத் தனியாகக் கணக்கில் கொள்ள வேண்டும்.</p><p><b>பொருட்கள்:</b> அளவுநாடா மற்றும் கணிப்பான்.</p><p><b>முறை:</b> தொட்டியின் வெளிப்புறக் கண்ணாடி அளவுகளை அல்லாமல், உள் நீளம், உள் அகலம் மற்றும் உண்மையான நீர் உயரத்தை அளக்கவும்.</p><p><b>முடிவு:</b> கருவிகள் பகுதியில் உள்ள நீரளவுக் கணிப்பியைப் பயன்படுத்தி மதிப்பைச் சரிபார்க்கவும்.</p><p><b>முன்னெச்சரிக்கை:</b> உருளை மற்றும் வளைந்த முன்புறம் கொண்ட தொட்டிகளுக்கு வேறு கணக்கீட்டு முறைகள் தேவை. இன்ச்–கேலன் போன்ற எளிமைப்படுத்தப்பட்ட மீன் அடர்த்தி விதிகளைப் பயன்படுத்த வேண்டாம்.</p><p><b>வாய்மொழி வினா:</b> தொட்டியின் மொத்த உயரத்திற்கு பதிலாக உண்மையான நீர் உயரத்தை ஏன் பயன்படுத்த வேண்டும்?</p>"
+ ),
+ "id":(
+  "<p><b>Aim:</b> Identify important external characters used in ornamental-fish recognition and sex determination.</p><p><b>Principle:</b> Koi possess barbels around the mouth, whereas oranda is a goldfish variety with a characteristic wen. Male poeciliids such as guppies, mollies, platies and swordtails possess a gonopodium.</p><p><b>Precautions:</b> Minimise handling and repeated netting. Illustrations are learning aids and should not replace examination of a healthy specimen or a reliable diagnostic photograph.</p><p><b>Viva:</b> Which external characters distinguish koi from oranda?</p>",
+  "<p><b>நோக்கம்:</b> அலங்கார மீன்களை இனங்காணவும் பாலினத்தை வேறுபடுத்தவும் உதவும் முக்கிய வெளிப்புறப் பண்புகளை அறிதல்.</p><p><b>கோட்பாடு:</b> கோய் மீனின் வாயைச் சுற்றி பார்பல்கள் காணப்படும்; ஓராண்டா தங்கமீனின் அலங்கார இரகமாகும், அதன் தலையில் வென் எனப்படும் மாமிச வளர்ச்சி காணப்படும். கப்பி, மொல்லி, பிளாட்டி, வாள்வால் போன்ற பீசிலிட் ஆண் மீன்களில் கோனோபோடியம் காணப்படும்.</p><p><b>முன்னெச்சரிக்கை:</b> மீன்களைத் தேவையில்லாமல் கையாளுதல் மற்றும் மீண்டும் மீண்டும் வலைபோடுதல் தவிர்க்கப்பட வேண்டும். இங்கே தரப்பட்டுள்ள படங்கள் கற்றலுக்கான உதவிப்படங்களாகும்; ஆரோக்கியமான மாதிரி அல்லது நம்பகமான அடையாளப் புகைப்படத்தைப் பார்வையிடுவதற்குப் பதிலாக பயன்படுத்தக் கூடாது.</p><p><b>வாய்மொழி வினா:</b> கோய் மற்றும் ஓராண்டாவை வேறுபடுத்த உதவும் வெளிப்புறப் பண்புகள் யாவை?</p>"
+ ),
+ "chem":(
+  "<p><b>Aim:</b> Record pH, GH, KH, total ammonia nitrogen (TAN), nitrite, nitrate and temperature using appropriate test kits.</p><p><b>Principle:</b> Colour-comparison kits should be read under suitable white/daylight illumination. TAN is not identical to unionised ammonia (NH₃); the NH₃ fraction rises as pH and temperature increase.</p><p><b>Precautions:</b> Check expiry dates and follow the kit manufacturer's timing and sample-volume instructions. Do not determine medication dosage from illustrative colour examples.</p><p><b>Viva:</b> Why can the same TAN value become more hazardous at a higher pH?</p>",
+  "<p><b>நோக்கம்:</b> பொருத்தமான சோதனைக் கருவிகளைப் பயன்படுத்தி pH, GH, KH, மொத்த அமோனியா நைட்ரஜன் (TAN), நைட்ரைட், நைட்ரேட் மற்றும் வெப்பநிலையைப் பதிவு செய்தல்.</p><p><b>கோட்பாடு:</b> நிற ஒப்பீட்டுச் சோதனைகளை ஏற்ற வெள்ளை அல்லது பகலொளியில் வாசிக்க வேண்டும். TAN என்பது அயனியாகாத அமோனியா (NH₃) அளவுக்கு சமமல்ல; pH மற்றும் வெப்பநிலை உயரும்போது NH₃ பகுதி அதிகரிக்கும்.</p><p><b>முன்னெச்சரிக்கை:</b> கருவியின் காலாவதி தேதியைச் சரிபார்த்து, தயாரிப்பாளர் குறிப்பிட்ட நேரம் மற்றும் மாதிரி அளவைப் பின்பற்ற வேண்டும். உதாரண நிறங்களை வைத்து மருந்தளவை நிர்ணயிக்கக் கூடாது.</p><p><b>வாய்மொழி வினா:</b> ஒரே TAN மதிப்பில் pH உயரும்போது நச்சுத்தன்மை ஏன் அதிகரிக்கலாம்?</p>"
+ ),
+ "pack":(
+  "<p><b>Aim:</b> Practise the sequence of ornamental-fish packing without using live animals.</p><p><b>Procedure:</b> On paper, grade fish by species and size; plan an appropriate pre-transport fasting period according to species, size and journey duration; estimate water volume and oxygen headspace; plan double-bagging; and prepare labels with species name and number of fish.</p><p><b>Precautions:</b> Actual live-fish packing must follow species-specific stocking density, temperature and journey-time requirements under competent supervision.</p>",
+  "<p><b>நோக்கம்:</b> உயிருள்ள மீன்களைப் பயன்படுத்தாமல் அலங்கார மீன் பொதியிடும் செயல்முறையின் வரிசையைப் பயிற்சி செய்தல்.</p><p><b>முறை:</b> தாளில் இனமும் அளவும் அடிப்படையாக மீன்களை வகைப்படுத்தவும்; இனம், மீன் அளவு, பயண நேரம் ஆகியவற்றுக்கு ஏற்ற முன் உணவு நிறுத்தும் காலத்தைத் திட்டமிடவும்; பையில் தேவையான நீரளவும் ஆக்சிஜன் இடவசதியும் கணக்கிடவும்; இரட்டைப் பை முறையைத் திட்டமிடவும்; இனப் பெயரும் மீன் எண்ணிக்கையும் கொண்ட அடையாளச் சீட்டைத் தயாரிக்கவும்.</p><p><b>முன்னெச்சரிக்கை:</b> உயிருள்ள மீன்களை உண்மையில் பொதியிடும்போது இனத்திற்கேற்ற மீன் அடர்த்தி, வெப்பநிலை, பயண நேரம் ஆகியவற்றைப் பின்பற்றி திறமையான மேற்பார்வையில் செயல்பட வேண்டும்.</p>"
+ )
+}
+
 def clean_en(s):
  for a,b in [
   ("Current Science / welfare practice:","Scientific and welfare note:"),
@@ -179,6 +198,7 @@ def main():
  for x in labs:
   x["en"]=clean_en(x["en"]); x["ta"]=clean_ta(x["ta"])
   if x["id"] in LAB_TITLES: x["en_t"],x["ta_t"]=LAB_TITLES[x["id"]]
+  if x["id"] in LAB_BODIES: x["en"],x["ta"]=LAB_BODIES[x["id"]]
   x["ta"]=x["ta"].replace("இவ்வளவுரையின் வரைபடங்கள்","இங்கே உள்ள வரைபடங்கள்").replace("இவ்வளவுரையின் நிற அட்டவணை","இங்கே உள்ள நிற அட்டவணை")
  json.dump(labs,open(DATA/"labs.json","w",encoding="utf-8"),ensure_ascii=False,separators=(",",":"))
 

@@ -81,6 +81,7 @@ internal fun OrnamentalFishNativeApp(
         val prefs = remember { context.getSharedPreferences("of_native_state", Context.MODE_PRIVATE) }
         var tamil by remember { mutableStateOf(prefs.getBoolean("tamil", false)) }
         var section by rememberSaveable { mutableStateOf(NativeSection.HOME) }
+        var previousSectionKey by rememberSaveable { mutableStateOf<String?>(null) }
         var selectedId by rememberSaveable { mutableStateOf<String?>(null) }
         var privacy by rememberSaveable { mutableStateOf(false) }
         var bookmarks by remember {
@@ -91,8 +92,19 @@ internal fun OrnamentalFishNativeApp(
             when {
                 selectedId != null -> selectedId = null
                 privacy -> privacy = false
+                previousSectionKey != null -> {
+                    section = NativeSection.entries.firstOrNull { it.key == previousSectionKey } ?: NativeSection.HOME
+                    previousSectionKey = null
+                }
                 else -> section = NativeSection.HOME
             }
+        }
+
+        fun navigateTo(target: NativeSection) {
+            if (target != section) previousSectionKey = section.key
+            section = target
+            selectedId = null
+            privacy = false
         }
 
         Scaffold(
@@ -122,15 +134,11 @@ internal fun OrnamentalFishNativeApp(
                     NativeSection.entries.forEach { item ->
                         NavigationBarItem(
                             selected = section == item && !privacy,
-                            onClick = {
-                                section = item
-                                selectedId = null
-                                privacy = false
-                            },
+                            onClick = { navigateTo(item) },
                             icon = {
                                 Icon(
                                     painter = painterResource(item.iconRes),
-                                    contentDescription = if (tamil) item.ta else item.en,
+                                    contentDescription = null,
                                     modifier = Modifier.size(22.dp)
                                 )
                             },
@@ -149,11 +157,11 @@ internal fun OrnamentalFishNativeApp(
                             content = content,
                             tamil = tamil,
                             bookmarkCount = bookmarks.size,
-                            onAtlas = { section = NativeSection.ATLAS },
-                            onLearn = { section = NativeSection.LEARN },
-                            onQuiz = { section = NativeSection.QUIZ },
-                            onTools = { section = NativeSection.TOOLS },
-                            onPrivacy = { privacy = true }
+                            onAtlas = { navigateTo(NativeSection.ATLAS) },
+                            onLearn = { navigateTo(NativeSection.LEARN) },
+                            onQuiz = { navigateTo(NativeSection.QUIZ) },
+                            onTools = { navigateTo(NativeSection.TOOLS) },
+                            onPrivacy = { previousSectionKey = section.key; privacy = true }
                         )
                         NativeSection.ATLAS -> NativeAtlasScreen(
                             species = content.species,
@@ -201,7 +209,12 @@ private fun NativeHomeScreen(
             ) {
                 Column {
                     hero?.let {
-                        NativeAssetImage(it.image, Modifier.fillMaxWidth().height(150.dp), fit = true)
+                        NativeAssetImage(
+                            it.image,
+                            Modifier.fillMaxWidth().height(150.dp),
+                            fit = true,
+                            description = if (tamil) it.ta else it.en
+                        )
                     }
                     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
@@ -355,14 +368,14 @@ private fun NativeAtlasScreen(
     share: (String) -> Unit,
     exportBookmarks: (String) -> Unit
 ) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var filter by rememberSaveable { mutableStateOf("all") }
+
     val selected = selectedId?.let { id -> species.firstOrNull { it.id == id } }
     if (selected != null) {
         NativeSpeciesDetail(selected, tamil, selected.id in bookmarks, onBack, onBookmark, speak, share)
         return
     }
-
-    var query by rememberSaveable { mutableStateOf("") }
-    var filter by rememberSaveable { mutableStateOf("all") }
     val visible = remember(species, query, filter) {
         species.filter { NativeSpeciesMatcher.matches(it, query, filter) }
     }
@@ -441,7 +454,12 @@ private fun NativeAtlasScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    NativeAssetImage(fish.image, Modifier.size(104.dp), fit = true)
+                    NativeAssetImage(
+                        fish.image,
+                        Modifier.size(104.dp),
+                        fit = true,
+                        description = if (tamil) fish.ta else fish.en
+                    )
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text(
@@ -530,7 +548,12 @@ private fun NativeSpeciesDetail(
             }
         }
 
-        NativeAssetImage(fish.image, Modifier.fillMaxWidth().height(250.dp), fit = true)
+        NativeAssetImage(
+            fish.image,
+            Modifier.fillMaxWidth().height(250.dp),
+            fit = true,
+            description = name
+        )
         Text(name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text(
             fish.sci.substringBefore("(").trim(),
@@ -637,7 +660,12 @@ internal fun NativeDetailBlock(title: String, rows: List<Pair<String, String>>) 
 }
 
 @Composable
-private fun NativeAssetImage(name: String, modifier: Modifier, fit: Boolean) {
+private fun NativeAssetImage(
+    name: String,
+    modifier: Modifier,
+    fit: Boolean,
+    description: String? = null
+) {
     val context = LocalContext.current
     val bitmap = remember(name) {
         if (name.isBlank()) null else runCatching {
@@ -648,7 +676,7 @@ private fun NativeAssetImage(name: String, modifier: Modifier, fit: Boolean) {
         if (bitmap != null) {
             Image(
                 bitmap = bitmap,
-                contentDescription = null,
+                contentDescription = description,
                 modifier = Modifier.fillMaxSize().padding(if (fit) 4.dp else 0.dp),
                 contentScale = if (fit) ContentScale.Fit else ContentScale.Crop
             )

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ornamental Fish Science</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_atlas">Atlas</string>
-    <string name="nav_learn">Learn</string>
-    <string name="nav_quiz">Quiz</string>
-    <string name="nav_tools">Tools</string>
     <string name="share_title">Share species</string>
     <string name="share_failed">No app available to share</string>
     <string name="export_failed">Could not export bookmarks</string>
