@@ -152,7 +152,7 @@ internal fun NativeLearnScreen(
             }
 
             Text(
-                if (tamil) page.taTitle else page.enTitle,
+                nativeLessonDisplayTitle(if (tamil) page.taTitle else page.enTitle),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
@@ -190,6 +190,10 @@ internal fun NativeLearnScreen(
         }
     }
 }
+
+private fun nativeLessonDisplayTitle(title: String): String = title
+    .replace(Regex("^Unit\\s+[IVXLCDM]+\\s*[—-]\\s*", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("^அலகு\\s+[IVXLCDM]+\\s*[—-]\\s*"), "")
 
 @Composable
 private fun NativePracticalList(labs: List<LabActivity>, tamil: Boolean) {
