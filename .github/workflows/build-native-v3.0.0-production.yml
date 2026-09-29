@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - release/v3.0.0-privacy-link-fix-20260929
+      - release/v3.0.0-privacy-browser-hardening-20260929
 
 permissions:
   contents: read
@@ -14,7 +14,7 @@ env:
   EXPECTED_CERT_SHA256: '59F5D6ECBFED41958CA04DA3E23E5CE9ADA98814D5023B053336C39F0D21F51B'
   EXPECTED_PACKAGE: 'com.tnfisheries.ornamentalfish'
   EXPECTED_VERSION_NAME: '3.0.0'
-  EXPECTED_VERSION_CODE: '302'
+  EXPECTED_VERSION_CODE: '303'
 
 jobs:
   production:
@@ -78,6 +78,10 @@ jobs:
           ! grep -q "debugImplementation 'androidx.compose.ui:ui-tooling'" app/build.gradle
           ! grep -q 'applicationIdSuffix' app/build.gradle || grep -q "applicationIdSuffix '.nativeqa'" app/build.gradle
           ! grep -q 'android.permission.INTERNET' app/src/main/AndroidManifest.xml
+          grep -q "androidx.browser:browser:1.10.0" app/build.gradle
+          grep -q 'androidx.browser.customtabs.CustomTabsIntent' app/src/main/java/com/tnfisheries/ornamentalfish/NativeApp.kt
+          grep -q 'android.intent.category.BROWSABLE' app/src/main/AndroidManifest.xml
+          grep -q 'android:scheme="https"' app/src/main/AndroidManifest.xml
           ! grep -q 'android:debuggable=' app/src/main/AndroidManifest.xml
           ! grep -q 'android:configChanges=' app/src/main/AndroidManifest.xml
           echo 'NATIVE SOURCE ARCHITECTURE GATE: PASS'
@@ -163,9 +167,9 @@ jobs:
           set -euo pipefail
           APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
           AAB=$(find app/build/outputs/bundle/release -name '*.aab' | head -1)
-          cp "$APK" OrnamentalFish-v3.0.0-final-production-v302.apk
-          cp "$AAB" OrnamentalFish-v3.0.0-final-production-v302.aab
-          sha256sum OrnamentalFish-v3.0.0-final-production-v302.apk OrnamentalFish-v3.0.0-final-production-v302.aab | tee release-sha256.txt
+          cp "$APK" OrnamentalFish-v3.0.0-final-production-v303.apk
+          cp "$AAB" OrnamentalFish-v3.0.0-final-production-v303.aab
+          sha256sum OrnamentalFish-v3.0.0-final-production-v303.apk OrnamentalFish-v3.0.0-final-production-v303.aab | tee release-sha256.txt
           sha256sum app/src/main/assets/data/species.json app/src/main/assets/data/book.json app/src/main/assets/data/quiz.json app/src/main/assets/data/labs.json | tee release-data-sha256.txt
           echo "SOURCE_COMMIT=$GITHUB_SHA" | tee release-provenance.txt
           echo "PACKAGE=$EXPECTED_PACKAGE" >> release-provenance.txt
@@ -176,10 +180,10 @@ jobs:
       - name: Upload production release evidence
         uses: actions/upload-artifact@v4
         with:
-          name: OrnamentalFish-v3.0.0-final-production-v302
+          name: OrnamentalFish-v3.0.0-final-production-v303
           path: |
-            OrnamentalFish-v3.0.0-final-production-v302.apk
-            OrnamentalFish-v3.0.0-final-production-v302.aab
+            OrnamentalFish-v3.0.0-final-production-v303.apk
+            OrnamentalFish-v3.0.0-final-production-v303.aab
             release-signing.txt
             aab-signature-verification.txt
             release-badging.txt
