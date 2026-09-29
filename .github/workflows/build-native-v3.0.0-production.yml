@@ -2,6 +2,9 @@ name: Ornamental Fish v3.0.0 Native Production
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - release/v3.0.0-native-production-20260929
 
 permissions:
   contents: read
