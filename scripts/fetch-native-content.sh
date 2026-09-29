@@ -22,6 +22,7 @@ test -s "$ROOT/app/src/main/res/drawable/old_goldfish_launcher.png"
 sha256sum "$ROOT/app/src/main/res/drawable/old_goldfish_launcher.png" | sed 's#  .*#  old_goldfish_launcher.png#'
 
 python3 "$ROOT/scripts/phase2-content-polish.py"
+python3 "$ROOT/scripts/phase4-tamil-lessons-polish.py"
 
 rm -f "$ROOT/app/src/main/assets/index.html" "$ROOT/app/src/main/assets/privacy-policy.html" "$ROOT/app/src/main/res/drawable/app_icon.png"
 rm -rf "$ROOT/app/src/main/assets/js" "$ROOT/app/src/main/assets/css"
