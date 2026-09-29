@@ -92,7 +92,15 @@ run("shell","settings","put","system","accelerometer_rotation","0")
 run("shell","settings","put","system","user_rotation","0")
 run("shell","am","force-stop","com.tnfisheries.ornamentalfish")
 run("shell","monkey","-p","com.tnfisheries.ornamentalfish","-c","android.intent.category.LAUNCHER","1")
-wait(3)
+
+# Wait for the real Compose Home screen rather than capturing the Android splash screen.
+for _ in range(30):
+    if find_text("Explore the science of ornamental fishes") is not None:
+        break
+    wait(0.7)
+else:
+    raise RuntimeError("Home screen did not become ready after launch")
+wait(1)
 
 # 1. Home
 screenshot("01_home_native")
