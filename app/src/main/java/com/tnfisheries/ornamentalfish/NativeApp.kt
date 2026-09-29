@@ -1,9 +1,12 @@
 package com.tnfisheries.ornamentalfish
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -719,11 +722,40 @@ private fun NativePrivacyScreen(tamil: Boolean) {
             else
                 "No third-party advertising, analytics SDK or cross-app tracking is included."
         )
+        val privacyPolicyUrl = "https://rameshgascngl-create.github.io/Zoology-and-Life-Sciences-Digital-Learning-Resources/ornamental-fish-science/privacy-policy.html"
         Button(onClick = {
-            val uri = Uri.parse("https://rameshgascngl-create.github.io/Zoology-and-Life-Sciences-Digital-Learning-Resources/ornamental-fish-science/privacy-policy-v2.html")
-            runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, uri)) }
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyPolicyUrl)).apply {
+                addCategory(Intent.CATEGORY_BROWSABLE)
+            }
+            val chooser = Intent.createChooser(
+                browserIntent,
+                if (tamil) "உலாவியைத் தேர்ந்தெடுக்கவும்" else "Open privacy policy with"
+            )
+            runCatching { context.startActivity(chooser) }
+                .onFailure {
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(ClipData.newPlainText("Privacy Policy", privacyPolicyUrl))
+                    Toast.makeText(
+                        context,
+                        if (tamil) "உலாவியைத் திறக்க முடியவில்லை. இணைப்பு நகலெடுக்கப்பட்டது."
+                        else "Browser could not be opened. Privacy-policy URL copied.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
         }) {
-            Text(if (tamil) "HTTPS தனியுரிமைக் கொள்கையைத் திற" else "Open HTTPS privacy policy")
+            Text(if (tamil) "உலாவியில் தனியுரிமைக் கொள்கையைத் திற" else "Open privacy policy in browser")
+        }
+        OutlinedButton(onClick = {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("Privacy Policy", privacyPolicyUrl))
+            Toast.makeText(
+                context,
+                if (tamil) "தனியுரிமைக் கொள்கை இணைப்பு நகலெடுக்கப்பட்டது."
+                else "Privacy-policy URL copied.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }) {
+            Text(if (tamil) "இணைப்பை நகலெடு" else "Copy policy URL")
         }
         HorizontalDivider()
         Text(
