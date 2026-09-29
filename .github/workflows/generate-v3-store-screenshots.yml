@@ -70,7 +70,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            set -euo pipefail
+            set -eu
             APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
             adb install -r "$APK"
             python3 scripts/capture-store-screenshots.py
