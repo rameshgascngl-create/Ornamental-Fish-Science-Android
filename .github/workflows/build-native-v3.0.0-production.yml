@@ -134,7 +134,53 @@ jobs:
           unzip -Z1 "$APK" | grep -q '^assets/data/book.json$'
           unzip -Z1 "$APK" | grep -q '^assets/data/quiz.json$'
           unzip -Z1 "$APK" | grep -q '^assets/data/labs.json$'
-          test "$(unzip -Z1 "$APK" | grep '^assets/fish_atlas/.*\.webp$' | wc -l)" -eq 22
+          test "$(unzip -Z1 "$APK" | grep -E '^assets/fish_atlas/.*\.(jpg|jpeg|png|webp)
+          ! unzip -Z1 "$APK" | grep -Eq '^assets/(index\.html|js/|css/)'
+          ! unzip -Z1 "$AAB" | grep -Eq '(^|/)assets/(index\.html|js/|css/)'
+
+          TMP=$(mktemp -d)
+          unzip -q "$APK" 'classes*.dex' -d "$TMP"
+          ! grep -a -R -E -q 'android/webkit/WebView|android/webkit/JavascriptInterface|PreviewActivity|file:///android_asset/index\.html|\.nativeqa|3\.0\.0-alpha' "$TMP"
+
+          test -s app/build/outputs/mapping/release/mapping.txt
+          cp app/build/outputs/mapping/release/mapping.txt release-r8-mapping.txt
+          echo 'NATIVE PRODUCTION BINARY GATE: PASS'
+
+      - name: Freeze production artifacts and hashes
+        run: |
+          set -euo pipefail
+          APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
+          AAB=$(find app/build/outputs/bundle/release -name '*.aab' | head -1)
+          cp "$APK" OrnamentalFish-v3.0.0-native-production.apk
+          cp "$AAB" OrnamentalFish-v3.0.0-native-production.aab
+          sha256sum OrnamentalFish-v3.0.0-native-production.apk OrnamentalFish-v3.0.0-native-production.aab | tee release-sha256.txt
+          sha256sum app/src/main/assets/data/species.json app/src/main/assets/data/book.json app/src/main/assets/data/quiz.json app/src/main/assets/data/labs.json | tee release-data-sha256.txt
+          echo "SOURCE_COMMIT=$GITHUB_SHA" | tee release-provenance.txt
+          echo "PACKAGE=$EXPECTED_PACKAGE" >> release-provenance.txt
+          echo "VERSION_NAME=$EXPECTED_VERSION_NAME" >> release-provenance.txt
+          echo "VERSION_CODE=$EXPECTED_VERSION_CODE" >> release-provenance.txt
+          echo "CERT_SHA256=$EXPECTED_CERT_SHA256" >> release-provenance.txt
+
+      - name: Upload production release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: OrnamentalFish-v3.0.0-native-production
+          path: |
+            OrnamentalFish-v3.0.0-native-production.apk
+            OrnamentalFish-v3.0.0-native-production.aab
+            release-signing.txt
+            aab-signature-verification.txt
+            release-badging.txt
+            release-manifest-tree.txt
+            release-sha256.txt
+            release-data-sha256.txt
+            release-provenance.txt
+            release-r8-mapping.txt
+            zipalign.txt
+            app/build/reports/lint-results-release.html
+            app/build/reports/lint-results-release.xml
+            app/build/reports/lint-results-release.txt
+ | wc -l)" -eq 22
           ! unzip -Z1 "$APK" | grep -Eq '^assets/(index\.html|js/|css/)'
           ! unzip -Z1 "$AAB" | grep -Eq '(^|/)assets/(index\.html|js/|css/)'
 
