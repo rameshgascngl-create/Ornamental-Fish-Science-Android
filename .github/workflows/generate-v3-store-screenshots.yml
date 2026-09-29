@@ -1,0 +1,99 @@
+name: Generate v3.0.0 Indus Store Screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - qa/v3.0.0-store-screenshots-20260929
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Restore verified native content
+        run: bash scripts/fetch-native-content.sh
+
+      - name: Restore permanent production keystore
+        env:
+          OFISH_KEYSTORE_BASE64: ${{ secrets.OFISH_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          test -n "$OFISH_KEYSTORE_BASE64"
+          printf '%s' "$OFISH_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/ornamental-fish-release.jks"
+          chmod 600 "$RUNNER_TEMP/ornamental-fish-release.jks"
+
+      - name: Build exact production UI
+        env:
+          OFISH_KEYSTORE_FILE: ${{ runner.temp }}/ornamental-fish-release.jks
+          OFISH_KEYSTORE_PASSWORD: ${{ secrets.OFISH_KEYSTORE_PASSWORD }}
+          OFISH_KEY_ALIAS: ${{ secrets.OFISH_KEY_ALIAS }}
+          OFISH_KEY_PASSWORD: ${{ secrets.OFISH_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          gradle --no-daemon clean :app:assembleRelease
+          APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
+          "$ANDROID_HOME/build-tools/36.0.0/aapt2" dump badging "$APK" | tee screenshot-build-badging.txt
+          grep -q "package: name='com.tnfisheries.ornamentalfish' versionCode='303' versionName='3.0.0'" screenshot-build-badging.txt
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Capture native Android screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            APK=$(find app/build/outputs/apk/release -name '*.apk' | head -1)
+            adb install -r "$APK"
+            python3 scripts/capture-store-screenshots.py
+
+      - name: Verify screenshot set
+        run: |
+          set -euo pipefail
+          test "$(find store-screenshots -name '*.png' | wc -l)" -eq 8
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          for p in sorted(Path('store-screenshots').glob('*.png')):
+              im=Image.open(p)
+              print(p.name, im.size)
+              assert im.width >= 720 and im.height >= 1280
+          PY
+          zip -j OrnamentalFish-v3.0.0-Indus-store-screenshots.zip store-screenshots/*.png
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: OrnamentalFish-v3.0.0-Indus-store-screenshots
+          path: |
+            store-screenshots/*.png
+            OrnamentalFish-v3.0.0-Indus-store-screenshots.zip
+            screenshot-build-badging.txt
