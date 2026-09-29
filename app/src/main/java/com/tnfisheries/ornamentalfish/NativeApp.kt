@@ -419,8 +419,8 @@ private fun NativeAtlasScreen(
                 modifier = Modifier.fillMaxWidth(),
                 label = {
                     Text(
-                        if (tamil) "பெயர், அறிவியல் பெயர், குடும்பம் அல்லது பரவல்"
-                        else "Search name, scientific name, family or region"
+                        if (tamil) "இனம், குடும்பம் அல்லது பரவல் பகுதியைத் தேடுக"
+                        else "Search species, family or region"
                     )
                 },
                 singleLine = true
