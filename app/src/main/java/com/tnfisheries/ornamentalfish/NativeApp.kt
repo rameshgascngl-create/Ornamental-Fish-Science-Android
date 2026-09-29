@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -691,6 +692,40 @@ private fun NativeAssetImage(
     }
 }
 
+private fun openPrivacyPolicyExternally(context: Context, url: String, tamil: Boolean) {
+    val uri = Uri.parse(url)
+
+    val customTabsOpened = runCatching {
+        CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setShareState(CustomTabsIntent.SHARE_STATE_ON)
+            .build()
+            .launchUrl(context, uri)
+    }.isSuccess
+    if (customTabsOpened) return
+
+    val directOpened = runCatching {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, uri).apply {
+                addCategory(Intent.CATEGORY_BROWSABLE)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+    }.isSuccess
+    if (directOpened) return
+
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    clipboard.setPrimaryClip(ClipData.newPlainText("Privacy Policy", url))
+    Toast.makeText(
+        context,
+        if (tamil)
+            "உலாவியைத் திறக்க முடியவில்லை. தனியுரிமைக் கொள்கை இணைப்பு நகலெடுக்கப்பட்டது."
+        else
+            "Browser could not be opened. Privacy-policy URL copied.",
+        Toast.LENGTH_LONG
+    ).show()
+}
+
 @Composable
 private fun NativePrivacyScreen(tamil: Boolean) {
     val context = LocalContext.current
@@ -724,24 +759,7 @@ private fun NativePrivacyScreen(tamil: Boolean) {
         )
         val privacyPolicyUrl = "https://rameshgascngl-create.github.io/Zoology-and-Life-Sciences-Digital-Learning-Resources/ornamental-fish-science/privacy-policy.html"
         Button(onClick = {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyPolicyUrl)).apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-            }
-            val chooser = Intent.createChooser(
-                browserIntent,
-                if (tamil) "உலாவியைத் தேர்ந்தெடுக்கவும்" else "Open privacy policy with"
-            )
-            runCatching { context.startActivity(chooser) }
-                .onFailure {
-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Privacy Policy", privacyPolicyUrl))
-                    Toast.makeText(
-                        context,
-                        if (tamil) "உலாவியைத் திறக்க முடியவில்லை. இணைப்பு நகலெடுக்கப்பட்டது."
-                        else "Browser could not be opened. Privacy-policy URL copied.",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            openPrivacyPolicyExternally(context, privacyPolicyUrl, tamil)
         }) {
             Text(if (tamil) "உலாவியில் தனியுரிமைக் கொள்கையைத் திற" else "Open privacy policy in browser")
         }
