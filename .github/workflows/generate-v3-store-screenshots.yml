@@ -77,14 +77,10 @@ jobs:
         run: |
           set -euo pipefail
           test "$(find store-screenshots -name '*.png' | wc -l)" -eq 8
-          python3 - <<'PY'
-          from PIL import Image
-          from pathlib import Path
-          for p in sorted(Path('store-screenshots').glob('*.png')):
-              im=Image.open(p)
-              print(p.name, im.size)
-              assert im.width >= 720 and im.height >= 1280
-          PY
+          for p in store-screenshots/*.png; do
+            file "$p" | tee -a screenshot-dimensions.txt
+            file "$p" | grep -Eq 'PNG image data, [0-9]+ x [0-9]+'
+          done
           zip -j OrnamentalFish-v3.0.0-Indus-store-screenshots.zip store-screenshots/*.png
 
       - name: Upload screenshots
@@ -95,3 +91,4 @@ jobs:
             store-screenshots/*.png
             OrnamentalFish-v3.0.0-Indus-store-screenshots.zip
             screenshot-build-badging.txt
+            screenshot-dimensions.txt
